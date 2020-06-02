@@ -1,6 +1,8 @@
 import random
 from random import randrange
 
+#TODO percentage and fixed start/finish
+
 class Maze:
     def __init__(self, size):
         #Size represents n x n of rows and columns
@@ -37,11 +39,15 @@ class Maze:
         while True:
             self.start = self.pickRandomPosition()
             if self.grid[self.start[0]][self.start[1]] == 0:
+                #We make the value of the start -2
+                self.grid[self.start[0]][self.start[1]] = -2
                 break
-        #Set finish
+        #Set Finish
         while True:
             self.finish = self.pickRandomPosition()
             if self.grid[self.finish[0]][self.finish[1]] == 0:
+                #We make the value of the finish = -3
+                self.grid[self.finish[0]][self.finish[1]] = -3
                 break
     
     #Tests if the given wall should become a path or stay a wall
@@ -51,7 +57,14 @@ class Maze:
         
         try:
             if(row != 0 and col != 0):
+
+                #Roll random number for the elif (This number will represent the percentage that determines how often the maze will have more than one path going from a random point a to a random point b)
+                roll = random.randint(1,100)
+
                 if((self.grid[row-1][col] + self.grid[row][col+1] + self.grid[row+1][col] + self.grid[row][col-1]) == -3):
+                    self.grid[row][col] = 0 #The wall becomes path
+                    self.addToWallsList([row,col])
+                elif((self.grid[row-1][col] + self.grid[row][col+1] + self.grid[row+1][col] + self.grid[row][col-1]) == -2 and roll <= 80):
                     self.grid[row][col] = 0 #The wall becomes path
                     self.addToWallsList([row,col])
         except IndexError:
@@ -77,7 +90,7 @@ class Maze:
     def pickRandomPosition(self):
         return randrange(self.size),randrange(self.size)
 
-    #Prints the maze with the values -1 and 0
+    #Prints the maze with numeric values
     def printMaze(self):
         for row in self.grid:
             for val in row:

@@ -1,10 +1,15 @@
+import time
 from tkinter import *
 from maze import Maze
+from mazeSolver3000 import MazeSolver
 
 if __name__ == "__main__":
     #Create maze object
-    maze = Maze(40)
+    maze = Maze(50)
     maze.createMaze()
+
+    mazeSolver = MazeSolver(maze.size,maze.grid,maze.start,maze.finish)
+    mazeSolver.solveMaze()
     
     #Create GUI object
     root = Tk()
@@ -37,4 +42,14 @@ if __name__ == "__main__":
     btn = Button(frame, bg = 'red') #create a button inside frame 
     btn.grid(row=maze.finish[0], column=maze.finish[1], sticky=N+S+E+W)  
 
+    for i in range(0,len(mazeSolver.path)):
+
+        root.update()
+
+        time.sleep(0.2)
+        btn = Button(frame, bg = 'blue') #create a button inside frame 
+        btn.grid(row = mazeSolver.path[i][0], column= mazeSolver.path[i][1], sticky=N+S+E+W)  
+
     root.mainloop()
+
+    
