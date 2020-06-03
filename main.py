@@ -3,9 +3,16 @@ from tkinter import *
 from maze import Maze
 from mazeSolver3000 import MazeSolver
 
+#Config variables
+#Maze size: SIZE = rows = columns
+SIZE = 40
+#Amount of time in seconds that the thread stops when showing the path from start to finish cell by cell
+SLEEP = 0.1
+
+
 if __name__ == "__main__":
     #Create maze object
-    maze = Maze(50)
+    maze = Maze(SIZE)
     maze.createMaze()
 
     mazeSolver = MazeSolver(maze.size,maze.grid,maze.start,maze.finish)
@@ -46,7 +53,7 @@ if __name__ == "__main__":
 
         root.update()
 
-        time.sleep(0.2)
+        time.sleep(SLEEP)
         btn = Button(frame, bg = 'blue') #create a button inside frame 
         btn.grid(row = mazeSolver.path[i][0], column= mazeSolver.path[i][1], sticky=N+S+E+W)  
 

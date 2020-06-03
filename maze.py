@@ -1,7 +1,12 @@
 import random
 from random import randrange
 
-#TODO percentage and fixed start/finish
+#Config variables
+#Please choose value from 1 to 100 (1 means there will always be just one path from start to finish, while 100 will remove as many walls as possible to make sure there are multiple paths from start to finish)
+PERCENTAGE = 1
+#Boolean that determines if the start and finish will be chosen randomly or will be in opposite cornes from each other
+FIXEDSTART = True
+
 
 class Maze:
     def __init__(self, size):
@@ -35,20 +40,49 @@ class Maze:
         while(len(self.wallsList) > 0):
             self.makePath(random.choice(self.wallsList))
 
-        #Set Start
-        while True:
-            self.start = self.pickRandomPosition()
-            if self.grid[self.start[0]][self.start[1]] == 0:
-                #We make the value of the start -2
-                self.grid[self.start[0]][self.start[1]] = -2
-                break
-        #Set Finish
-        while True:
-            self.finish = self.pickRandomPosition()
-            if self.grid[self.finish[0]][self.finish[1]] == 0:
-                #We make the value of the finish = -3
-                self.grid[self.finish[0]][self.finish[1]] = -3
-                break
+        if(not FIXEDSTART):
+            #Set Start
+            while True:
+                self.start = self.pickRandomPosition()
+                if self.grid[self.start[0]][self.start[1]] == 0:
+                    #We make the value of the start -2
+                    self.grid[self.start[0]][self.start[1]] = -2
+                    break
+            #Set Finish
+            while True:
+                self.finish = self.pickRandomPosition()
+                if self.grid[self.finish[0]][self.finish[1]] == 0:
+                    #We make the value of the finish = -3
+                    self.grid[self.finish[0]][self.finish[1]] = -3
+                    break
+        else:
+            #Set Start
+            i,j = 1,1
+            while True:
+                self.start = [i,j]
+                if self.grid[self.start[0]][self.start[1]] == 0:
+                    #We make the value of the start -2
+                    self.grid[self.start[0]][self.start[1]] = -2
+                    break
+                if(i >= j):
+                    j += 1
+                else:
+                    i += 1
+
+            #Set Finish
+            i,j = self.size-1,self.size-1
+            while True:
+                self.finish = [i,j]
+                if self.grid[self.finish[0]][self.finish[1]] == 0:
+                    #We make the value of the finish = -3
+                    self.grid[self.finish[0]][self.finish[1]] = -3
+                    break
+                if(i <= j):
+                    j -= 1
+                else:
+                    i -= 1
+                
+
     
     #Tests if the given wall should become a path or stay a wall
     def makePath(self,wall):
@@ -64,7 +98,7 @@ class Maze:
                 if((self.grid[row-1][col] + self.grid[row][col+1] + self.grid[row+1][col] + self.grid[row][col-1]) == -3):
                     self.grid[row][col] = 0 #The wall becomes path
                     self.addToWallsList([row,col])
-                elif((self.grid[row-1][col] + self.grid[row][col+1] + self.grid[row+1][col] + self.grid[row][col-1]) == -2 and roll <= 80):
+                elif((self.grid[row-1][col] + self.grid[row][col+1] + self.grid[row+1][col] + self.grid[row][col-1]) == -2 and roll <= PERCENTAGE):
                     self.grid[row][col] = 0 #The wall becomes path
                     self.addToWallsList([row,col])
         except IndexError:
